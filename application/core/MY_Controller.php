@@ -77,6 +77,15 @@ class Admin_Controller extends MY_Controller
 
 	}
 
+	public function dumpme($data) {
+		if($data){
+			if (is_array($data)) {
+				foreach($data as $key=> $value) {
+					print "<pre>" . $key . "<span> :: " . $value . " </span></pre>"  ;
+				}
+			}
+		}
+	}
 	
 	public function currency()
 	{

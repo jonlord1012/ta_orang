@@ -18,6 +18,23 @@
     <section class="content">
       <!-- Small boxes (Stat box) -->
       <?php if($is_admin == true): ?>
+			<div class="row"> 
+			 <div class="col-lg-6 col-xs-12">
+            <!-- small box -->
+            <div class="small-box bg-green">
+              <div class="inner">
+                <h3> <span class="pull-right"> Rp.  <?php echo number_format($total_income,0,',' , '.') ?></span></h3>
+                <p>Total Income </p>
+					 <p><strong> <?php echo date("M Y") ; ?> </strong></p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-cash"></i>
+              </div>
+              <a href="<?php echo base_url('ordersnew/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+			</div>
 
         <div class="row">
           <div class="col-lg-3 col-xs-6">
@@ -29,7 +46,8 @@
                 <p>Total Products</p>
               </div>
               <div class="icon">
-                <i class="ion ion-bag"></i>
+                <i class="ion ion-wineglass"></i>
+                <i class="ion ion-pizza"></i>
               </div>
               <a href="<?php echo base_url('products/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
@@ -46,7 +64,7 @@
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="<?php echo base_url('orders/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              <a href="<?php echo base_url('ordersnew/') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->

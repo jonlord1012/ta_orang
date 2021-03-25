@@ -202,7 +202,7 @@
 			$viewBill = " style ='display : relative;' " ;
 		}
 
-		if(!in_array('createBill', $this->permission)) {
+		if(!in_array('createBill', $this->permission) || ($order_data['order']['paid_status'] == 1) ){
 			$createBill = " style ='display : none;' " ;
 		}else {
 			$createBill = " style ='display : relative;' " ;
@@ -406,8 +406,8 @@
 				 </div>
 				 <div class="row form-group">
 					<label for="discount" class="col-sm-5 control-label">Discount %</label>
-					<input type="text" class=" text-right col-sm-2 " id="discount_value" name="discount_value" placeholder="% - Discount in Percent"  autocomplete="off"> 
-					<input type="text" class="text-right col-sm-5" id="discount_amount" name="discount_amount" placeholder="Rp - Discount in Amount" autocomplete="off">
+					<input type="text" class=" text-right col-sm-2 " id="payment_discount_charge_rate" name="payment_discount_charge_rate" placeholder="% - Discount in Percent"  autocomplete="off"> 
+					<input type="text" class="text-right col-sm-5" id="payment_discount_charge_value" name="payment_discount_charge_value" placeholder="Rp - Discount in Amount" autocomplete="off">
 				 </div>
 				</div>
 			</div>
@@ -437,30 +437,24 @@
 				 </div>
 				</div>
          </div>
+          </div>
 		
-			<input type="hidden"  name="" />
-			<input type="hidden" id="payment_discount_charge_rate" name="payment_discount_charge_rate" />
-			<input type="hidden" id="payment_discount_charge_rate" name="payment_discount_charge_rate" />
-			<input type="hidden" id="payment_discount_charge_rate" name="payment_discount_charge_rate" />
-			<input type="hidden" id="payment_discount_charge_value" name="payment_discount_charge_value" />
-			
 			
 			<input type="hidden" name="billorderheadid" id="rorderheadid" class="form-control" autocomplete="off" value="">
 			<input type="hidden" name="totalamount" id="totalamount" class="form-control" disabled placeholder="Total Bill" value="">
 			<input type="hidden" name="cashtened" id="cashtend" class="form-control" required placeholder="Enter Payment">
-          </div>
+			<input type="hidden" id="payment_vat_charge_rate" name="payment_vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>"/>
+			<input type="hidden" id="payment_vat_charge_value" name="payment_vat_charge_value" value="<?php echo $order_data['order']['vat_charge_amount'] ?>" />
 		  <div class="form-group">
 			<input type="hidden" name="amount_change" id="amount_change" class="form-control" disabled autocomplete="off">
 			<input type="hidden" id="payment_bill_no" name="payment_bill_no"   value="<?php echo $order_data['order']['bill_no'] ; ?>" />
 			<input type="hidden" id="payment_order_id" name="payment_order_id"  value="<?php echo $order_data['order']['id'] ; ?>"/>
 			<input type="hidden" id="payment_table_id" name="payment_table_id"  value="<?php echo $order_data['order_table']['id'] ; ?>" />
 			<input type="hidden" id="payment_store_id" name="payment_store_id" value="<?php echo $order_data['order_table']['store_id'] ; ?>"  />
-			<input type="hidden" id="payment_gross_amount_value" name="payment_gross_amount_value" />
-			<input type="hidden" id="payment_service_charge_rate" name="payment_service_charge_rate" />
-			<input type="hidden" id="payment_service_charge_value" name="payment_service_charge_value" />
-			<input type="hidden" id="payment_vat_charge_rate" name="payment_vat_charge_rate" />
-			<input type="hidden" id="payment_vat_charge_value" name="payment_vat_charge_value" />
-			<input type="hidden" id="payment_net_amount_value" name="payment_net_amount_value" />				
+			<input type="hidden" id="payment_gross_amount_value" name="payment_gross_amount_value" value="<?php echo $order_data['order']['gross_amount'] ?>" />
+			<input type="hidden" id="payment_service_charge_rate" name="payment_service_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>"/>
+			<input type="hidden" id="payment_service_charge_value" name="payment_service_charge_value" value="<?php echo $order_data['order']['vat_charge_amount'] ?>" />
+			<input type="hidden" id="payment_net_amount_value" name="payment_net_amount_value" value="<?php echo $order_data['order']['net_amount'] ?>" />				
 
 
         <div class="modal-footer">			 

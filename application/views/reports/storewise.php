@@ -91,7 +91,7 @@
                       <td><?php echo $k; ?></td>
                       <td><?php 
                       
-                        echo $company_currency .' ' . $v;
+                        echo $company_currency .' ' .  number_format($v,0,',','.');
                         //echo $v;
                       
                       ?></td>
@@ -103,7 +103,7 @@
                   <tr>
                     <th>Total Amount</th>
                     <th>
-                      <?php echo $company_currency . ' ' . array_sum($results); ?>
+                      <?php echo $company_currency . ' ' . number_format((array_sum($results)),2, ',' , '.' ); ?>
                       <?php //echo array_sum($results); ?>
                     </th>
                   </tr>

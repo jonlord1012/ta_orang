@@ -303,32 +303,44 @@ class OrdersNew extends Admin_Controller
 		if(!in_array('createBill' , $this->permission)) {
 			redirect('dashboard', 'refresh');
 		}
+		
 		$headID = $this->input->post('order_id');
 		$dataBill = array (
-			'order_id' 				=> $this->input->post('order_id')	,
-			'bill_no' 				=>	$this->input->post('bill_no')	,
-			'table_id' 				=>	$this->input->post('table_id')	,
-			'stores_id' 			=>	$this->input->post('store_id')	,
+			'order_id' 				=> $this->input->post('payment_order_id')	,
+			'bill_no' 				=>	$this->input->post('payment_bill_no')	,
+			'table_id' 				=>	$this->input->post('payment_table_id')	,
+			'stores_id' 			=>	$this->input->post('payment_store_id')	,
 			'user_created' 		=>	$this->session->userdata('id')	,
 			'user_updated' 		=>	$this->session->userdata('id')	,
-			'tax_charge' 			=>	$this->input->post('vat_charge_rate')	,
-			'tax_amount' 			=>	$this->input->post('vat_charge_value')	,
-			'service_charge' 		=>	$this->input->post('service_charge_rate')	,
-			'service_amount' 		=>	$this->input->post('service_charge_value')	,
-			'discount_charge' 	=>	$this->input->post('discount_charge')	,
-			'discount_amount' 	=>	$this->input->post('discount_charge_value')	,
+			'amount' 				=>	$this->input->post('payment_gross_amount_value')	,
+			'tax_charge' 			=>	$this->input->post('payment_vat_charge_rate')	,
+			'tax_amount' 			=>	$this->input->post('payment_vat_charge_value')	,
+			'service_charge' 		=>	$this->input->post('payment_service_charge_rate')	,
+			'service_amount' 		=>	$this->input->post('payment_service_charge_value')	,
+			'discount_charge' 	=>	($this->input->post('payment_discount_charge_rate') > 0) ? $this->input->post('payment_discount_charge_rate') : 0	,
+			'discount_amount' 	=>	($this->input->post('payment_discount_charge_value') > 0 ) ? $this->input->post('payment_discount_charge_value') : 0	,
 			'total_amount' 		=>	$this->input->post('net_amount_value')	,
 			'status' 				=>	1	,
 		);
 		$this->data['payment_data'] = $dataBill;
-		$this->data['table_data'] = $this->model_tables->getActiveTable();
-		$this->data['page_title'] = 'Manage Orders';
-		$this->render_template('ordersnew/payment', $this->data);		
 		
-				
-		print_r($this->input->post());
-		print_r($dataBill);
+		$this->dumpme($dataBill) ;
 		#die();
+		
+		
+		if($this->db->insert('payments', $dataBill)) {
+			$this->load->model('model_tables');
+			$this->model_tables->update($this->input->post('payment_table_id'), array('available' => 1));
+			$this->model_orders->update_status($this->input->post('payment_order_id'), array('paid_status' => 1)) ; 
+			
+			#return true;
+			$this->session->set_flashdata('success', 'Successfully updated');
+			redirect('orderNew', 'refresh');
+		}else {
+			#return false ;
+			$this->session->set_flashdata('errors', 'Failed and Error, Please recheck');
+			redirect('ordersNew/update/'.$headID, 'refresh');
+		}
 		
 	}
 	
@@ -567,18 +579,20 @@ class OrdersNew extends Admin_Controller
   		}
         
 		if($id) {
+			
 			$order_data = $this->model_orders->getOrdersData($id);
 			$orders_items = $this->model_orders->getOrdersItemData($id);
 			$company_info = $this->model_company->getCompanyData(1);
 			$store_data = $this->model_stores->getStoresData($order_data['store_id']);
 
+			
 			$order_date = date('d/m/Y', $order_data['date_time']);
 			$paid_status = ($order_data['paid_status'] == 1) ? "Paid" : "Unpaid";
 
 			$table_data = $this->model_tables->getTableData($order_data['table_id']);
 
-			if ($order_data['discount'] > 0) {
-				$discount = $this->currency_code . ' ' .$order_data['discount'];
+			if ($order_data['discount_charge_amount'] > 0) {
+				$discount = $this->currency_code . ' ' .$order_data['discount_charge_amount'];
 			}
 			else {
 				$discount = '0';

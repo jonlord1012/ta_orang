@@ -84,6 +84,9 @@ class Model_orders extends CI_Model
 		$insert = $this->db->insert('orders', $data);
 		$order_id = $this->db->insert_id();
 		
+		$this->load->model('model_tables');
+    	$this->model_tables->update($this->input->post('table_name'), array('available' => 2));
+		
 		#redirect('ordersNew/update/'.$order_id, 'refresh');
 		#print $order_id;
 		
@@ -279,11 +282,31 @@ class Model_orders extends CI_Model
 		}
 	}
 
-	public function countTotalPaidOrders()
+	public function countTotalPaidOrders($month)
 	{
-		$sql = "SELECT * FROM orders WHERE paid_status = ?";
-		$query = $this->db->query($sql, array(1));
-		return $query->num_rows();
+		$this->db->where('month(timestamp)', $month) ;
+		$exec = $this->db->get('number_paid');
+		return $exec->num_rows();
 	}
+
+
+	public function sumTotalPaidOrders($month)
+	{
+		$sql = "SELECT sum(total_amount) as totalOmset FROM number_paid WHERE month(timestamp) = ?  group by month(timestamp) ;" ;
+		$exec = $this->db->query($sql, $month);
+		$ret =  $exec->row();
+		
+		return $ret->totalOmset ;
+	}
+
+
+	public function update_status($id = null, $data = array())
+	{		
+		$this->db->where('id', $id);
+		$update = $this->db->update('orders', $data);
+
+		return ($update == true) ? true : false;
+	}
+
 
 }
